@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>To-Do List</title>
+</head>
+<body>
+<div class="main-container" style="display: flex;" >
+    <div class="right-nav-bar">
+        <img src="./img/Logo.png" alt="logo" style="height: 48px;" >
+       
+       <ul style="list-style: none; margin: 0; padding: 10px;" class="right-nav-list">
+        <li style="display: flex; align-items: center;gap: 10px;"> <img src="./icons/dashbaord.png" alt="dashbaord" style="height: 24px;">Dashboard</li>
+        <li class="selected" style="display: flex; align-items: center;gap: 10px;"> <img src="./icons/task.png" alt="dashbaord" style="height: 24px;">Tasks</li>
+        <li style="display: flex; align-items: center;gap: 10px;"> <img src="./icons/mesage.png" alt="dashbaord" style="height: 24px;">Messages</li>
+        <li style="display: flex; align-items: center;gap: 10px;"> <img src="./icons/report.png" alt="dashbaord" style="height: 24px;">Report</li>
+       </ul>
+    </div>
+
+ <div class="left-nav-bar">
+    
+<div class="top-right-bar">
+
+    <div class="dropdown" style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+        
+        <p>Sort:</p>
+    <select name="dropdown" id="selector">
+        <option value="one">Today</option>
+        <option value="one">This Week</option>
+        <option value="one">Last Week</option>
+        <option value="one">This Month</option>
+        <option value="one">Customer</option>
+    </select>
+    </div>
+    
+    <div class="profile" style="margin: 0; padding: 0; display: flex;   align-items: center; gap: 10px;">
+        <img src="./img/profile.png" alt="profile picture" style="height: 48px;">
+        <div style="padding: 0; margin: 0;">
+        <h4 style="padding: 0; margin: 0;">John Doe</h4>
+        <p style="padding: 0; margin: 0;">Web Developer</p>
+    </div>
+    </div>
+</div>
+
+<div class="right-header" style="margin-left: 50px;">
+    <div class="header">
+    <h1 style="margin-bottom: 0;">Tasks</h1>
+    <p style="margin-top: 5px; color: #928f8f; font-size: large;">Welcome Back, Danhy</p>
+</div>
+
+
+</div>
+
+<div class="todo-container" style="margin-left: 50px;">
+
+    <div class= "header-todo" style="display: flex; justify-content: space-between; align-items: center; width: 95%;">
+    <h2>ToDo List</h2>
+    <form id="todo-form">
+        <input type="text" id="todo-input" placeholder="Add a new task..." required>
+        <button type="submit">Add</button>
+    </form>
+</div  >
+    <ul id="todo-list">
+
+        <div class="task-title" style="display: flex; align-items: center;">       
+            <h4>  <input type="checkbox" id="todo-checkbox" name="todo-checkbox"> Task</h4>
+
+            <h4>Date</h4>
+            <h4>Assignee</h4>
+            <h4>Actions</h4>
+            </div>
+<hr style="margin-bottom: 20px;">
+
+        <div class="task">       
+            <div style="display: flex; align-items: center;">
+            <input type="checkbox" id="todo-checkbox" name="todo-checkbox">
+                <label for="todo-checkbox">Task 1</label>
+            </div>
+            <div>10/6/2025</div>
+            <div>Assigne</div>
+            <div>
+                <button>Edit</button>
+                <button>Remove</button>
+            </div>
+            </div>
+        <div class="task" >       
+                <div style="display: flex; align-items: center;">
+                <input type="checkbox" id="todo-checkbox" name="todo-checkbox" >
+                    <label for="todo-checkbox">Task 2</label>
+                </div>
+                <div>10/6/2025</div>
+                <div>Assigne</div>
+                <div>
+                    <button>Edit</button>
+                    <button>Remove</button>
+                </div>
+                </div>
+        <div class="task">       
+                    <div style="display: flex; align-items: center;"> 
+                    <input type="checkbox" id="todo-checkbox" name="todo-checkbox">
+                        <label for="todo-checkbox">Task 3</label>
+                    </div>
+                    <div>10/6/2025</div>
+                    <div>Assigne</div>
+                    <div>
+                        <button>Edit</button>
+                        <button>Remove</button>
+                    </div>
+                    </div>
+    </ul>
+
+
+
+ </div>
+<div class="bg-black" style="visibility: hidden;">
+ <div class="modal-edit">
+    <div class="modal-content">
+      <div style="display: flex;justify-content: end; ">  <span class="close"  style="background-color: #f5f5f5; padding: 4px 8px; border-radius: 5px;">&times;</span>
+      </div><h2>Edit Task</h2>
+        <form id="edit-form">
+            <input type="text" id="edit-input" placeholder="Edit task..." required>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+ </div>
+</div>
+ 
+</div>
+
+<script>
+    let currentEditingTask = null; 
+    
+    function CreateItems(todoText) {
+        if (todoText === '') return;
+        const todoList = document.getElementById('todo-list');
+        const newTask = document.createElement('div');
+        newTask.classList.add('task');
+        newTask.innerHTML = `
+            <div>
+                <input type="checkbox" id="todo-checkbox" name="todo-checkbox">
+                <label for="todo-checkbox">${todoText}</label>
+            </div>
+            <div>${new Date().toLocaleDateString()}</div>
+            <div>Assignee</div>
+            <div>
+                <button type="button">Edit</button>
+                <button type="button">Remove</button>
+            </div>
+        `;
+        todoList.appendChild(newTask);
+    }
+    
+    document.getElementById('todo-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const todoInput = document.getElementById('todo-input');
+        const todoText = todoInput.value.trim();
+        CreateItems(todoText);
+        todoInput.value = '';
+        todoInput.focus();
+    });
+    
+    document.getElementById('todo-list').addEventListener('click', function(event) {
+        const target = event.target;
+        const task = target.closest('.task');
+    
+        if (target.tagName === 'BUTTON') {
+            if (target.textContent === 'Remove' && task) {
+                task.remove();
+            }
+    
+            if (target.textContent === 'Edit' && task) {
+                currentEditingTask = task;
+                const label = task.querySelector('label');
+                document.getElementById('edit-input').value = label.textContent;
+                document.querySelector('.bg-black').style.visibility = 'visible';
+            }
+        }
+    });
+    
+
+    document.getElementById('edit-form').addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        if (currentEditingTask) {
+            const newText = document.getElementById('edit-input').value.trim();
+            if (newText !== '') {
+                const label = currentEditingTask.querySelector('label');
+                label.textContent = newText;
+            }
+            document.querySelector('.bg-black').style.visibility = 'hidden';
+            currentEditingTask = null;
+        }
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const closeButton = document.querySelector('.close');
+        closeButton.addEventListener('click', function() {
+            document.querySelector('.bg-black').style.visibility = 'hidden';
+            currentEditingTask = null;
+        });
+    });
+    </script>
+<!-- <script>
+    
+    function CreateItems (todoText) {
+    
+    if (todoText === '') return;
+    const todoList = document.getElementById('todo-list');
+    const newTask = document.createElement('div');
+    newTask.classList.add('task');
+    newTask.innerHTML = `
+        <div>
+            <input type="checkbox" id="todo-checkbox" name="todo-checkbox">
+            <label for="todo-checkbox">${todoText}</label>
+        </div>
+        <div>${new Date().toLocaleDateString()}</div>
+        <div>Assignee</div>
+        <div>
+            <button>Edit</button>
+            <button>Remove</button>
+        </div>
+    `;
+    todoList.appendChild(newTask);
+    }
+    
+document.getElementById('todo-form').addEventListener('submit', function () {
+    event.preventDefault();
+    const todoInput = document.getElementById('todo-input');
+    const todoText = todoInput.value.trim();
+    CreateItems(todoText);
+    todoInput.value = '';
+    todoInput.focus();
+    
+});     
+
+document.getElementById('todo-list').addEventListener('click', function(event) {
+    if (event.target.tagName === 'BUTTON' && event.target.textContent === 'Remove') {
+        const task = event.target.closest('.task');
+        if (task) {
+            task.remove();
+        }
+    }
+});
+
+document.getElementById('todo-list').addEventListener('click', function(event) {
+    if (event.target.tagName === 'BUTTON' && event.target.textContent === 'Edit') {
+        const task = event.target.closest('.task');
+        console.log(task)
+        if (task) {
+            const label = task.querySelector('label');
+            const newText = document.querySelector('#edit-input').value.trim();
+            const editForm = document.getElementById('edit-form');
+            if (newText !== null) {
+                label.textContent = newText.trim();
+            }
+        }
+        document.querySelector('.bg-black').style.visibility = 'visible';
+    }
+});
+
+addEventListener('DOMContentLoaded', function() {
+    const closeButton = document.querySelector('.close');
+    closeButton.addEventListener('click', function() {
+        document.querySelector('.bg-black').style.visibility = 'hidden';
+    });
+}); -->
+
+
+
+</script>
+</body>
+</html>
